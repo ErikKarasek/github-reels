@@ -1,0 +1,12 @@
+{
+  "name": "github-reels",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Scrapne GitHub Trending + AI novinky a napíše scénáře na reels",
+  "scripts": {
+    "scout": "node src/index.js --no-scripts",
+    "reels": "node src/index.js"
+  },
+  "engines": { "node": ">=20" }
+}

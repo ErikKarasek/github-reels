@@ -1,0 +1,27 @@
+# github-reels
+
+Scrapne GitHub Trending + nová repa, stáhne AI novinky (Hacker News + RSS), seřadí repa podle „reels potenciálu“ a nechá Claude napsat scénáře na reels v češtině.
+
+```bash
+npm run reels            # data + scénáře (přes `claude -p`, žádný API klíč)
+npm run scout            # jen data, bez scénářů
+node src/index.js --ai-only --top 20 --count 5 --model sonnet
+```
+
+Výstup jde do `out/<datum>/`:
+
+- `digest.md` – tabulka top rep + AI novinky
+- `reels.md` – scénáře (hook, tělo se záběry, titulky, popisek, hashtagy)
+- `prompt.md` – prompt, kdyby sis to chtěl pustit ručně
+- `data.json` – surová data
+
+## Zdroje
+
+- `github.com/trending` (dnes + týden) – scrape HTML
+- GitHub Search API – repa založená za posledních 7 dní, podle hvězd (token přes `gh auth token`)
+- Hacker News (Algolia API) – AI příběhy za 48 h s 80+ body
+- RSS: Simon Willison, Hugging Face, The Verge AI, TechCrunch AI
+
+## Skóre
+
+`log10(hvězdy za den) × 10` + 6 za AI téma + 4 za repo mladší než 14 dní + 2 za každý další žebříček, ve kterém se objeví. Laď v `src/rank.js`.
