@@ -28,10 +28,11 @@ ${newsLines}
 2. Ke každému napiš scénář na 30–45 s v češtině, hovorově, tykání, bez korporátních frází:
    - **HOOK (0–3 s)** – jedna věta, která zastaví scrollování. Žádné "Ahoj, dneska vám ukážu".
    - **Tělo** – 3–5 krátkých vět, co to je, proč to lidi řeší, konkrétní číslo (hvězdy, rychlost růstu, cena…).
-   - **Payoff / CTA** – co si z toho má divák odnést + výzva (uložit, sledovat, komentář).
+   - **Payoff / CTA** – co si z toho má divák odnést + výzva: „Napiš do komentáře REPO a pošlu ti odkaz do DM.“ (odkaz posílá ManyChat automaticky, jen followerům – nikdy neříkej, že odkaz je v bio).
    - Ke každé větě v hranatých závorkách **[záběr]** – co ukázat na obrazovce (screen recording repa, demo, README, graf hvězd…).
    - **Text na obrazovce** – 3–5 krátkých titulků.
-   - **Popisek + 5 hashtagů**.
+   - **Popisek + 5 hashtagů** – popisek končí „💬 Napiš REPO a pošlu ti odkaz“.
+   - **ManyChat** – odkaz, který má jít do DM (URL repa), a jedna věta, co v DM k odkazu napsat.
 3. Na konec dej jednu "rychlovku" – 15s reel "3 repa tohoto týdne" ve stylu výčtu.
 
 Drž se jen faktů z dat výše. Když něco nevíš jistě (co repo přesně dělá), napiš to jako poznámku pro autora, ať si to ověří, a nevymýšlej si.
