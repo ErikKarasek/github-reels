@@ -25,3 +25,14 @@ Výstup jde do `out/<datum>/`:
 ## Skóre
 
 `log10(hvězdy za den) × 10` + 6 za AI téma + 4 za repo mladší než 14 dní + 2 za každý další žebříček, ve kterém se objeví. Laď v `src/rank.js`.
+
+## Každé ráno samo
+
+launchd agent spustí `scripts/daily.sh` každý den v 7:00 (když Mac spí, doběhne po probuzení). Po doběhnutí přijde notifikace a otevře se `reels.md`. Log: `out/daily.log`.
+
+```bash
+cp scripts/com.erikkarasek.github-reels.plist ~/Library/LaunchAgents/
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.erikkarasek.github-reels.plist   # zapnout
+launchctl bootout gui/$(id -u)/com.erikkarasek.github-reels                                  # vypnout
+launchctl kickstart gui/$(id -u)/com.erikkarasek.github-reels                                # pustit hned
+```
