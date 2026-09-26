@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GitHub Reels</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Reels">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+<style>
+:root {
+  --bg: #f6f7f9; --surface: #ffffff; --surface-2: #eef0f3; --border: #dde1e6;
+  --text: #16181d; --muted: #5d6570; --accent: #6d4aff; --accent-soft: #ece7ff;
+  --good: #1a7f37; --warn-bg: #fff6d6; --warn-border: #e7c65a;
+  --radius: 14px; --fs: 17px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface-2: #1f2630; --border: #2b3340;
+    --text: #e8ebf0; --muted: #98a2b0; --accent: #a58bff; --accent-soft: #261f45;
+    --good: #4ac26b; --warn-bg: #2b2410; --warn-border: #6b5a1c;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 var(--fs)/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(14px); -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: calc(env(safe-area-inset-top) + 10px) 16px 0;
+}
+.bar { display: flex; align-items: center; gap: 10px; max-width: 760px; margin: 0 auto; }
+.bar h1 { font-size: 19px; margin: 0; letter-spacing: -0.01em; flex: 1; white-space: nowrap; }
+.bar select { min-width: 0; flex: 0 1 auto; }
+.bar h1 span { color: var(--accent); }
+select, .btn {
+  font: inherit; font-size: 15px; color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 10px; padding: 7px 10px; min-height: 36px;
+}
+.btn { cursor: pointer; line-height: 1; }
+.tabs { display: flex; gap: 4px; max-width: 760px; margin: 10px auto 0; }
+.tabs button {
+  flex: 1; font: inherit; font-size: 15px; font-weight: 600; color: var(--muted);
+  background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 4px; cursor: pointer;
+}
+.tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+
+main { max-width: 760px; margin: 0 auto; padding: 16px 16px calc(env(safe-area-inset-bottom) + 48px); }
+.empty { color: var(--muted); text-align: center; padding: 48px 0; }
+
+/* Scénáře */
+.md > .card, .card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px 18px 8px; margin: 0 0 14px;
+}
+.md h1 { font-size: 1.35em; line-height: 1.25; margin: 4px 0 14px; letter-spacing: -0.01em; }
+.md h2 { font-size: 1.2em; line-height: 1.3; margin: 0 0 12px; letter-spacing: -0.01em; }
+.md h3 { font-size: 1.02em; margin: 18px 0 6px; }
+.md p, .md ul, .md ol { margin: 0 0 12px; }
+.md ul, .md ol { padding-left: 1.25em; }
+.md li { margin: 4px 0; }
+.md strong { font-weight: 650; }
+.md hr { display: none; }
+.md blockquote {
+  margin: 0 0 12px; padding: 10px 14px; border-radius: 10px;
+  background: var(--warn-bg); border: 1px solid var(--warn-border);
+}
+.md blockquote p:last-child { margin-bottom: 0; }
+.md code {
+  font: 0.86em ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--surface-2); padding: 2px 6px; border-radius: 6px; word-break: break-all;
+}
+.md table { border-collapse: collapse; width: 100%; font-size: 0.9em; display: block; overflow-x: auto; }
+.md th, .md td { border: 1px solid var(--border); padding: 6px 8px; text-align: left; }
+.copy {
+  font: 600 12px/1 -apple-system, sans-serif; color: var(--accent); background: var(--accent-soft);
+  border: 0; border-radius: 6px; padding: 5px 8px; margin-left: 6px; cursor: pointer; vertical-align: 1px;
+}
+.copy.done { color: var(--good); }
+
+/* Repa + novinky */
+.repo h3 { margin: 0 0 4px; font-size: 1.02em; word-break: break-word; }
+.repo p { margin: 0 0 10px; color: var(--muted); font-size: 0.94em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.pill {
+  font-size: 13px; font-weight: 600; padding: 3px 9px; border-radius: 999px;
+  background: var(--surface-2); color: var(--muted);
+}
+.pill.hot { background: var(--accent-soft); color: var(--accent); }
+.news { list-style: none; padding: 0; margin: 0; }
+.news li { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; }
+.news a { color: var(--text); font-weight: 600; }
+.news small { display: block; color: var(--muted); margin-top: 4px; font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1>GitHub <span>Reels</span></h1>
+    <select id="day" aria-label="Den"></select>
+    <button class="btn" id="smaller" aria-label="Menší písmo">A−</button>
+    <button class="btn" id="bigger" aria-label="Větší písmo">A+</button>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="reels">Scénáře</button>
+    <button role="tab" data-tab="repos">Repa</button>
+    <button role="tab" data-tab="news">Novinky</button>
+  </nav>
+</header>
+<main id="view"><p class="empty">Načítám…</p></main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const view = $("#view");
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+};
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = (n) => Number(n).toLocaleString("cs-CZ");
+const cache = {};
+
+let fs = Number(store.get("fs")) || 17;
+const applyFs = () => document.documentElement.style.setProperty("--fs", fs + "px");
+applyFs();
+$("#smaller").onclick = () => { fs = Math.max(14, fs - 1); applyFs(); store.set("fs", fs); };
+$("#bigger").onclick = () => { fs = Math.min(26, fs + 1); applyFs(); store.set("fs", fs); };
+
+async function get(path, type = "json") {
+  if (cache[path]) return cache[path];
+  const res = await fetch(path, { cache: "no-cache" });
+  if (!res.ok) throw new Error(res.status);
+  return (cache[path] = type === "json" ? await res.json() : await res.text());
+}
+
+function state() {
+  const [date, tab] = location.hash.slice(1).split("/");
+  return { date, tab: tab || "reels" };
+}
+function go(date, tab) { location.hash = `${date}/${tab}`; }
+
+function copyButtons(root) {
+  root.querySelectorAll("code").forEach((code) => {
+    if (!/^https?:\/\//.test(code.textContent)) return;
+    const b = document.createElement("button");
+    b.className = "copy"; b.textContent = "Kopírovat";
+    b.onclick = async () => {
+      try { await navigator.clipboard.writeText(code.textContent); b.textContent = "Zkopírováno"; b.classList.add("done"); }
+      catch { b.textContent = "Nejde"; }
+      setTimeout(() => { b.textContent = "Kopírovat"; b.classList.remove("done"); }, 1600);
+    };
+    code.after(b);
+  });
+}
+
+// Každou sekci od <h2> zabalí do karty, ať se to na mobilu dobře čte.
+function cardify(html) {
+  const tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  const out = document.createElement("div");
+  out.className = "md";
+  let card = document.createElement("div");
+  card.className = "card";
+  for (const node of [...tmp.childNodes]) {
+    if (node.nodeName === "H2" && card.childNodes.length) {
+      out.append(card);
+      card = document.createElement("div");
+      card.className = "card";
+    }
+    card.append(node);
+  }
+  if (card.childNodes.length) out.append(card);
+  return out;
+}
+
+const renderers = {
+  async reels(date) {
+    let md;
+    try { md = await get(`d/${date}/reels.md`, "text"); }
+    catch { return `<p class="empty">Na tenhle den scénáře nejsou.</p>`; }
+    const node = cardify(DOMPurify.sanitize(marked.parse(md, { breaks: true })));
+    node.querySelectorAll("a").forEach((a) => { a.target = "_blank"; a.rel = "noopener"; });
+    copyButtons(node);
+    return node;
+  },
+  async repos(date) {
+    const { repos } = await get(`d/${date}/data.json`);
+    return repos.map((r, i) => `
+      <article class="card repo">
+        <h3>${i + 1}. <a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a></h3>
+        <p>${esc(r.description) || "<em>bez popisu</em>"}</p>
+        <div class="meta">
+          <span class="pill hot">+${fmt(r.velocity)} ⭐/den</span>
+          <span class="pill">${fmt(r.stars)} ⭐</span>
+          ${r.language ? `<span class="pill">${esc(r.language)}</span>` : ""}
+          ${r.ai ? `<span class="pill hot">AI</span>` : ""}
+          ${r.fresh ? `<span class="pill">nové</span>` : ""}
+        </div>
+      </article>`).join("");
+  },
+  async news(date) {
+    const { news } = await get(`d/${date}/data.json`);
+    if (!news.length) return `<p class="empty">Žádné novinky.</p>`;
+    return `<ul class="news">${news.map((n) => `
+      <li><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a>
+      <small>${esc(n.source)}${n.points ? ` · ${n.points} bodů` : ""}${n.discussion ? ` · <a href="${esc(n.discussion)}" target="_blank" rel="noopener">diskuze</a>` : ""}</small></li>`).join("")}</ul>`;
+  },
+};
+
+let days = [];
+async function render() {
+  let { date, tab } = state();
+  if (!days.some((d) => d.date === date)) date = days[0]?.date;
+  if (!renderers[tab]) tab = "reels";
+  $("#day").value = date;
+  document.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === tab));
+  if (!date) { view.innerHTML = `<p class="empty">Zatím tu nic není.</p>`; return; }
+  view.innerHTML = `<p class="empty">Načítám…</p>`;
+  try {
+    const out = await renderers[tab](date);
+    view.replaceChildren();
+    typeof out === "string" ? (view.innerHTML = out) : view.append(out);
+  } catch (e) {
+    view.innerHTML = `<p class="empty">Nepodařilo se načíst (${esc(e.message)}).</p>`;
+  }
+  window.scrollTo(0, 0);
+}
+
+(async () => {
+  try { days = await get("days.json"); } catch { days = []; }
+  const today = new Date().toLocaleDateString("sv-SE");
+  const label = (d) => new Date(d + "T12:00").toLocaleDateString("cs-CZ", { weekday: "short", day: "numeric", month: "numeric" });
+  $("#day").innerHTML = days.map((d, i) => `<option value="${d.date}">${d.date === today ? "Dnes · " : ""}${label(d.date)}</option>`).join("");
+  $("#day").onchange = (e) => go(e.target.value, state().tab);
+  document.querySelectorAll(".tabs button").forEach((b) => (b.onclick = () => go($("#day").value, b.dataset.tab)));
+  window.onhashchange = render;
+  render();
+})();
+</script>
+</body>
+</html>

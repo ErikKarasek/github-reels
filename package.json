@@ -1,12 +1,20 @@
 {
   "name": "github-reels",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Scrapne GitHub Trending + AI novinky a napíše scénáře na reels",
   "scripts": {
     "scout": "node src/index.js --no-scripts",
-    "reels": "node src/index.js"
+    "reels": "node src/index.js",
+    "site": "node src/site.js",
+    "deploy": "node src/site.js && wrangler deploy",
+    "preview": "node src/site.js && wrangler dev"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "wrangler": "^4.141.0"
+  }
 }

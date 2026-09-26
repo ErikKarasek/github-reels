@@ -5,8 +5,9 @@ cd "${0:A:h}/.." || exit 1
 
 day=$(date +%Y-%m-%d)
 if node src/index.js; then
-  osascript -e "display notification \"Scénáře jsou v out/$day/reels.md\" with title \"GitHub Reels\" sound name \"Glass\""
-  open "out/$day/reels.md"
+  npm run -s deploy >/dev/null 2>&1 || echo "Nahrání webu selhalo"
+  osascript -e "display notification \"Nové scénáře jsou v appce\" with title \"GitHub Reels\" sound name \"Glass\""
+  open "https://github-reels.erikkarasek2005.workers.dev/"
 else
   osascript -e "display notification \"Běh selhal – mrkni do out/daily.log\" with title \"GitHub Reels\""
 fi
