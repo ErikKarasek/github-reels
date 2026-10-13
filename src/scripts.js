@@ -50,9 +50,13 @@ export function runClaude(prompt, { model } = {}) {
     child.stdout.on("data", (d) => (out += d));
     child.stderr.on("data", (d) => (err += d));
     child.on("error", reject);
-    child.on("close", (code) =>
-      code === 0 ? resolve(out.trim()) : reject(new Error(`claude -p skončil s kódem ${code}: ${err.trim()}`)),
-    );
+    // Claude CLI píše důvod (limit, přihlášení) často na stdout, ne na stderr. Brát jen
+    // stderr znamenalo hlášku "skončil s kódem 1: " a žádnou šanci zjistit, co se stalo.
+    child.on("close", (code) => {
+      if (code === 0) return resolve(out.trim());
+      const why = [err.trim(), out.trim()].filter(Boolean).join(" | ").slice(0, 500);
+      reject(new Error(`claude -p skončil s kódem ${code}: ${why || "bez výstupu"}`));
+    });
     child.stdin.end(prompt);
   });
 }
