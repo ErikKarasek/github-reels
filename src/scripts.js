@@ -1,4 +1,13 @@
 import { spawn } from "node:child_process";
+import { mkdirSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+// Potomek běží mimo repo. V něm si Claude Code přečte AGENTS.md a scénáře pak začínaly
+// úvahou o pravidlech pro issues. Složka je stálá, ať se v /tmp nekupí prázdné adresáře.
+const CLAUDE_CWD = join(tmpdir(), "github-reels-claude");
+// Ranní běh nesmí viset do nekonečna, když CLI neodpoví.
+const CLAUDE_TIMEOUT_MIN = 10;
 
 export function buildPrompt({ repos, news, count }) {
   const repoLines = repos
@@ -44,15 +53,26 @@ export function runClaude(prompt, { model } = {}) {
   return new Promise((resolve, reject) => {
     const args = ["-p", "--output-format", "text"];
     if (model) args.push("--model", model);
-    const child = spawn("claude", args, { stdio: ["pipe", "pipe", "pipe"] });
+    mkdirSync(CLAUDE_CWD, { recursive: true });
+    const child = spawn("claude", args, { stdio: ["pipe", "pipe", "pipe"], cwd: CLAUDE_CWD });
     let out = "";
     let err = "";
+    let timedOut = false;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      child.kill("SIGKILL");
+    }, CLAUDE_TIMEOUT_MIN * 60_000);
     child.stdout.on("data", (d) => (out += d));
     child.stderr.on("data", (d) => (err += d));
-    child.on("error", reject);
+    child.on("error", (e) => {
+      clearTimeout(timer);
+      reject(e);
+    });
     // Claude CLI píše důvod (limit, přihlášení) často na stdout, ne na stderr. Brát jen
     // stderr znamenalo hlášku "skončil s kódem 1: " a žádnou šanci zjistit, co se stalo.
     child.on("close", (code) => {
+      clearTimeout(timer);
+      if (timedOut) return reject(new Error(`claude -p neodpověděl do ${CLAUDE_TIMEOUT_MIN} minut, ukončeno`));
       if (code === 0) return resolve(out.trim());
       const why = [err.trim(), out.trim()].filter(Boolean).join(" | ").slice(0, 500);
       reject(new Error(`claude -p skončil s kódem ${code}: ${why || "bez výstupu"}`));
