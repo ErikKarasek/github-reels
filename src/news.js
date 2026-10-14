@@ -1,4 +1,4 @@
-// AI novinky: Hacker News (Algolia API) + pár RSS/Atom feedů.
+// AI news: Hacker News (Algolia API) plus a few RSS/Atom feeds.
 
 const HN_QUERIES = ["AI", "LLM", "OpenAI", "Anthropic", "Claude", "Gemini", "GPT", "agent", "open source model"];
 
@@ -35,7 +35,7 @@ export async function hackerNews({ hours = 48, minPoints = 80 } = {}) {
           });
         }
       } catch {
-        /* jeden dotaz selže, ostatní pořád platí */
+        /* one query fails, the rest still hold */
       }
     }),
   );
@@ -71,7 +71,7 @@ export async function rssFeeds({ hours = 48 } = {}) {
           });
         }
       } catch {
-        /* feed nedostupný – přeskočit */
+        /* feed unreachable, skip it */
       }
     }),
   );

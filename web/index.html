@@ -66,7 +66,7 @@ select, .btn {
 main { max-width: 760px; margin: 0 auto; padding: 16px 16px calc(env(safe-area-inset-bottom) + 48px); }
 .empty { color: var(--muted); text-align: center; padding: 48px 0; }
 
-/* Scénáře */
+/* Reel scripts */
 .md > .card, .card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 18px 18px 8px; margin: 0 0 14px;
@@ -171,7 +171,7 @@ function copyButtons(root) {
   });
 }
 
-// Každou sekci od <h2> zabalí do karty, ať se to na mobilu dobře čte.
+// Wraps every <h2> section in a card, so it reads well on a phone.
 function cardify(html) {
   const tmp = document.createElement("div");
   tmp.innerHTML = html;

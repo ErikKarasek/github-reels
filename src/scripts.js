@@ -3,10 +3,11 @@ import { mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-// Potomek běží mimo repo. V něm si Claude Code přečte AGENTS.md a scénáře pak začínaly
-// úvahou o pravidlech pro issues. Složka je stálá, ať se v /tmp nekupí prázdné adresáře.
+// The child runs outside the repo. Inside it, Claude Code would read AGENTS.md and the scripts
+// then opened with musings about issue conventions. The folder is fixed, so /tmp does not fill
+// up with empty directories.
 const CLAUDE_CWD = join(tmpdir(), "github-reels-claude");
-// Ranní běh nesmí viset do nekonečna, když CLI neodpoví.
+// The morning run must not hang forever when the CLI does not answer.
 const CLAUDE_TIMEOUT_MIN = 10;
 
 export function buildPrompt({ repos, news, count }) {
@@ -48,7 +49,7 @@ Drž se jen faktů z dat výše. Když něco nevíš jistě (co repo přesně d�
 Výstup v Markdownu.`;
 }
 
-/** Pustí prompt přes Claude Code CLI (`claude -p`) – jede na tvém předplatném, žádný API klíč. */
+/** Runs the prompt through the Claude Code CLI (`claude -p`): it uses your subscription, no API key. */
 export function runClaude(prompt, { model } = {}) {
   return new Promise((resolve, reject) => {
     const args = ["-p", "--output-format", "text"];
@@ -68,8 +69,8 @@ export function runClaude(prompt, { model } = {}) {
       clearTimeout(timer);
       reject(e);
     });
-    // Claude CLI píše důvod (limit, přihlášení) často na stdout, ne na stderr. Brát jen
-    // stderr znamenalo hlášku "skončil s kódem 1: " a žádnou šanci zjistit, co se stalo.
+    // The Claude CLI often writes the reason (quota, sign-in) to stdout, not stderr. Taking only
+    // stderr meant a message of "exited with code 1: " and no way to tell what happened.
     child.on("close", (code) => {
       clearTimeout(timer);
       if (timedOut) return reject(new Error(`claude -p neodpověděl do ${CLAUDE_TIMEOUT_MIN} minut, ukončeno`));

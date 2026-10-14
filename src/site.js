@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Postaví statický web ze složky out/ do site/ (pak jde na Cloudflare Pages).
+// Builds the static site from out/ into site/ (which then goes to Cloudflare Pages).
 import { cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";

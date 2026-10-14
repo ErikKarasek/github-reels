@@ -15,7 +15,7 @@ const decode = (s) =>
 
 const num = (s) => Number(String(s ?? "0").replace(/[^\d]/g, "")) || 0;
 
-/** Scrapne github.com/trending. since = daily | weekly | monthly */
+/** Scrapes github.com/trending. since = daily | weekly | monthly */
 export async function scrapeTrending(since = "daily", language = "") {
   const url = `https://github.com/trending/${encodeURIComponent(language)}?since=${since}`;
   const res = await fetch(url, { headers: UA });
@@ -53,7 +53,7 @@ function ghToken() {
   }
 }
 
-/** Nová repa za posledních N dní seřazená podle hvězd (GitHub Search API). */
+/** New repos from the last N days, sorted by stars (GitHub Search API). */
 export async function searchNewRepos({ days = 7, minStars = 100, limit = 30 } = {}) {
   const since = new Date(Date.now() - days * 864e5).toISOString().slice(0, 10);
   const q = encodeURIComponent(`created:>=${since} stars:>=${minStars}`);
@@ -75,7 +75,7 @@ export async function searchNewRepos({ days = 7, minStars = 100, limit = 30 } = 
     language: r.language,
     stars: r.stargazers_count,
     forks: r.forks_count,
-    starsGained: r.stargazers_count, // celé je nové, takže všechny hvězdy jsou "získané"
+    starsGained: r.stargazers_count, // the whole thing is new, so every star counts as "gained"
     createdAt: r.created_at,
     topics: r.topics ?? [],
     period: `${days}d`,

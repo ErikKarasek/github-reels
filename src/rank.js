@@ -4,8 +4,8 @@ const AI_RE =
 export const isAI = (r) => AI_RE.test(`${r.name} ${r.description} ${(r.topics ?? []).join(" ")}`);
 
 /**
- * Spojí repa z více zdrojů a seřadí je podle "reels potenciálu":
- * rychlost růstu (hvězdy za den), AI téma, a jestli je repo nové (novinka > evergreen).
+ * Merges repos from several sources and sorts them by "reels potential":
+ * growth rate (stars per day), an AI topic, and whether the repo is new (news beats evergreen).
  */
 export function rankRepos(lists) {
   const byName = new Map();
