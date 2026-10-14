@@ -1,44 +1,44 @@
 # github-reels
 
-Scrapne GitHub Trending + nová repa, stáhne AI novinky (Hacker News + RSS), seřadí repa podle „reels potenciálu“ a nechá Claude napsat scénáře na reels v češtině.
+Scrapes GitHub Trending plus freshly created repos, pulls AI news (Hacker News + RSS), ranks the repos by "reel potential" and has Claude write reel scripts in Czech.
 
 ```bash
-npm run reels            # data + scénáře (přes `claude -p`, žádný API klíč)
-npm run scout            # jen data, bez scénářů
+npm run reels            # data + scripts (through `claude -p`, no API key)
+npm run scout            # data only, no scripts
 node src/index.js --ai-only --top 20 --count 5 --model sonnet
 ```
 
-Výstup jde do `out/<datum>/`:
+Output lands in `out/<date>/`:
 
-- `digest.md` – tabulka top rep + AI novinky
-- `reels.md` – scénáře (hook, tělo se záběry, titulky, popisek, hashtagy)
-- `prompt.md` – prompt, kdyby sis to chtěl pustit ručně
-- `data.json` – surová data
+- `digest.md` – table of top repos + AI news
+- `reels.md` – the scripts (hook, body with shots, captions, description, hashtags)
+- `prompt.md` – the prompt, in case you want to run it by hand
+- `data.json` – raw data
 
-## Appka
+## The app
 
-**https://github-reels.erikkarasek2005.workers.dev**: scénáře, repa a novinky pro každý den, dělané pro mobil. Na iPhonu: Safari → Sdílet → **Přidat na plochu**.
+**https://github-reels.erikkarasek2005.workers.dev**: scripts, repos and news for each day, built for the phone. On an iPhone: Safari → Share → **Add to Home Screen**.
 
-Web se staví ze složky `out/` (`src/site.js` + `web/`) a každé ráno se sám nahraje na Cloudflare (Workers static assets, `wrangler.jsonc`). Ručně: `npm run deploy`. Adresa je veřejná, ale nikde odkázaná a `noindex`.
+The site is built from `out/` (`src/site.js` + `web/`) and uploads itself to Cloudflare every morning (Workers static assets, `wrangler.jsonc`). By hand: `npm run deploy`. The address is public but linked from nowhere and `noindex`.
 
-## Zdroje
+## Sources
 
-- `github.com/trending` (dnes + týden) – scrape HTML
-- GitHub Search API – repa založená za posledních 7 dní, podle hvězd (token přes `gh auth token`)
-- Hacker News (Algolia API) – AI příběhy za 48 h s 80+ body
+- `github.com/trending` (today + this week) – HTML scrape
+- GitHub Search API – repos created in the last 7 days, by stars (token via `gh auth token`)
+- Hacker News (Algolia API) – AI stories from the last 48 h with 80+ points
 - RSS: Simon Willison, Hugging Face, The Verge AI, TechCrunch AI
 
-## Skóre
+## Score
 
-`log10(hvězdy za den) × 10` + 6 za AI téma + 4 za repo mladší než 14 dní + 2 za každý další žebříček, ve kterém se objeví. Laď v `src/rank.js`.
+`log10(stars per day) × 10` + 6 for an AI topic + 4 for a repo younger than 14 days + 2 for every further list it shows up in. Tune it in `src/rank.js`.
 
-## Každé ráno samo
+## Every morning on its own
 
-launchd agent spustí `scripts/daily.sh` každý den v 7:00 (když Mac spí, doběhne po probuzení). Po doběhnutí se web nahraje, přijde notifikace a otevře se appka. Log: `out/daily.log`.
+A launchd agent runs `scripts/daily.sh` at 7:00 every day (if the Mac is asleep, it catches up on wake). When it finishes, the site is uploaded, a notification arrives and the app opens. Log: `out/daily.log`.
 
 ```bash
 cp scripts/com.erikkarasek.github-reels.plist ~/Library/LaunchAgents/
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.erikkarasek.github-reels.plist   # zapnout
-launchctl bootout gui/$(id -u)/com.erikkarasek.github-reels                                  # vypnout
-launchctl kickstart gui/$(id -u)/com.erikkarasek.github-reels                                # pustit hned
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.erikkarasek.github-reels.plist   # on
+launchctl bootout gui/$(id -u)/com.erikkarasek.github-reels                                  # off
+launchctl kickstart gui/$(id -u)/com.erikkarasek.github-reels                                # run now
 ```
