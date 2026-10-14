@@ -1,12 +1,12 @@
 #!/bin/zsh
-# Pouští launchd každé ráno. launchd má holý PATH, proto ho nastavujeme ručně.
+# Run by launchd every morning. launchd has a bare PATH, so we set it by hand.
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 cd "${0:A:h}/.." || exit 1
 
 day=$(date +%Y-%m-%d)
 if node src/index.js; then
-  # Výstup deploye do logu, ať je vidět proč selhal. Bez úspěšného nahrání web ukazuje
-  # včerejšek, takže ho neotvírat, jako by byl čerstvý.
+  # Deploy output goes to the log, so a failure says why. Without a successful upload the site
+  # still shows yesterday, so do not open it as if it were fresh.
   if npm run -s deploy; then
     osascript -e "display notification \"Nové scénáře jsou v appce\" with title \"GitHub Reels\" sound name \"Glass\""
     open "https://github-reels.erikkarasek2005.workers.dev/"
