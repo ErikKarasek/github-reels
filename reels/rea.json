@@ -1,0 +1,20 @@
+{
+  "repo": "morluto/rea",
+  "description": "Reverse engineer anything with agents, from app behavior down to native binaries.",
+  "stars": 464211,
+  "language": "TypeScript",
+  "license": "MIT",
+  "keyword": "REPO",
+  "voice": "Liam",
+  "character": { "shape": "ghost", "color": "#e4dffb", "eyeColor": "#1c1638" },
+  "lines": [
+    { "text": "Tohle repo má na GitHubu přes 460 tisíc hvězd.", "say": "Tohle repo má na GitHubu přes čtyři sta šedesát tisíc hvězd.", "mood": "surprised", "card": "stars" },
+    { "text": "Jmenuje se rea.", "mood": "happy", "card": "name" },
+    { "text": "Dělá reverse engineering čehokoliv. Přes AI agenty.", "mood": "curious", "card": "desc" },
+    { "text": "Hodíš mu aplikaci a ono ti vysvětlí, jak funguje.", "mood": "happy", "card": "desc" },
+    { "text": "Od chování navenek až dolů do nativních binárek.", "mood": "curious", "card": "hex" },
+    { "text": "Normálně na to potřebuješ disassembler a hodně trpělivosti.", "mood": "tired", "card": "hex" },
+    { "text": "Je to TypeScript, licence MIT, celé open source.", "mood": "proud", "card": "meta" },
+    { "text": "Napiš do komentáře REPO a pošlu ti odkaz.", "mood": "love", "card": "cta" }
+  ]
+}

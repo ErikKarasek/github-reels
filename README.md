@@ -15,6 +15,21 @@ Output lands in `out/<date>/`:
 - `prompt.md` – the prompt, in case you want to run it by hand
 - `data.json` – raw data
 
+## Rendering a reel
+
+`npm run reel` turns one reel spec into a finished 1080×1920 video: an ElevenLabs voiceover, the Wisp Buddy mascot talking along to it, captions, and cards about the repo.
+
+```bash
+npm run reel -- reels/rea.json                    # voice + video → out/reels/rea/rea.mp4
+npm run reel -- reels/rea.json --voice Daniel     # another voice, by name or id
+npm run reel -- reels/rea.json --stills 1,10,20   # a few PNG frames to check the look
+```
+
+- **Key:** `npx -y @elevenlabs/cli@latest onboard init` in this folder signs in and stores `ELEVENLABS_API_KEY` in `.env` (git-ignored). The script loads it through `node --env-file-if-exists=.env`.
+- **Spec:** `reels/*.json` holds the repo facts (`repo`, `description`, `stars`, `language`, `license`), the mascot `character`, and the `lines`. Each line has the caption `text`, an optional `say` when it should be pronounced differently, a `mood` (any expression from the mascot: `happy`, `surprised`, `curious`, `proud`, `tired`, `love`…) and a `card`: `stars`, `name`, `desc`, `hex`, `meta` or `cta`.
+- **Cost:** each line is one request to `eleven_v4` with `language_code: cs`, billed per character (a 30 s reel is about 370). Clips are cached in `out/reels/.voice-cache`, so re-rendering only pays for lines that changed.
+- **Mascot:** `src/mascot/mascot.ts` is copied as-is from `wisp-buddy`; Node 24 runs it directly by stripping the types.
+
 ## The app
 
 **https://github-reels.erikkarasek2005.workers.dev**: scripts, repos and news for each day, built for the phone. On an iPhone: Safari → Share → **Add to Home Screen**.
