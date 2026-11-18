@@ -28,7 +28,12 @@ function wrap(text, max, rows) {
     if (last !== undefined && (last + " " + w).length <= max) out[out.length - 1] = last + " " + w;
     else out.push(w);
   }
-  if (out.length > rows) out.splice(rows - 1, out.length, out.slice(rows - 1).join(" ").slice(0, max - 1) + "…");
+  if (out.length > rows) {
+    // Cut the last row at a word, not in the middle of one, and drop a dangling dash or comma.
+    const rest = out.slice(rows - 1).join(" ").slice(0, max);
+    const cut = rest.slice(0, Math.max(rest.lastIndexOf(" "), 1)).replace(/[\s,;:–-]+$/, "");
+    out.splice(rows - 1, out.length, cut + "…");
+  }
   return out;
 }
 
@@ -77,7 +82,9 @@ function onAccent(hex) {
 
 function makeScene(reel, accent) {
   const [owner, name] = reel.repo.split("/");
-  const desc = wrap(reel.description, 26, 5);
+  // Four rows fit the card. A long description gives way to its first sentence before it is cut.
+  const firstSentence = reel.description.split(/(?<=[.!?])\s/)[0];
+  const desc = wrap(reel.description.length > 104 && firstSentence.length >= 20 ? firstSentence : reel.description, 26, 4);
   const hexRows = Array.from({ length: 9 }, (_, r) =>
     `${(0x1000 + r * 16).toString(16).padStart(8, "0")}  ` +
     Array.from({ length: 8 }, (_, c) => ((r * 73 + c * 151 + 29) % 256).toString(16).padStart(2, "0")).join(" "));
@@ -150,6 +157,10 @@ export async function render(reel, durations, voiceWav, out, { stills } = {}) {
   const character = reel.character ?? {};
   const accent = character.color ?? "#6d7fe0"; // the CTA and progress bar take the mascot's colour
   const scene = makeScene(reel, accent);
+  // The address pill grows with the repo name; Menlo is about 0.6 em per character.
+  const url = `github.com/${reel.repo}`;
+  const urlSize = Math.min(30, Math.floor(900 / (url.length * 0.6)));
+  const urlW = Math.round(url.length * urlSize * 0.6 + 70);
 
   const frameSvg = (t, f) => {
     let li = lines.findIndex((l) => t < l.start + l.dur);
@@ -175,8 +186,8 @@ export async function render(reel, durations, voiceWav, out, { stills } = {}) {
 <defs><radialGradient id="glow" cx="50%" cy="68%" r="60%"><stop offset="0" stop-color="#1f2a5c"/><stop offset="1" stop-color="#0d1117"/></radialGradient>
 <radialGradient id="halo"><stop offset="0" stop-color="${accent}" stop-opacity="0.35"/><stop offset="1" stop-color="${accent}" stop-opacity="0"/></radialGradient></defs>
 <rect width="${W}" height="${H}" fill="url(#glow)"/>
-<rect x="240" y="268" width="600" height="64" rx="32" fill="#21262d"/>
-<text x="540" y="312" text-anchor="middle" font-family="${MONO}" font-size="30" fill="#8b949e">github.com/${esc(reel.repo)}</text>
+<rect x="${540 - urlW / 2}" y="268" width="${urlW}" height="64" rx="32" fill="#21262d"/>
+<text x="540" y="312" text-anchor="middle" font-family="${MONO}" font-size="${urlSize}" fill="#8b949e">${esc(url)}</text>
 ${scene(l.card, t - cardStart, t)}
 <g transform="translate(540 990) scale(${s}) translate(-540 -990)">
 <text x="540" y="1010" ${capText} stroke="#0d1117" stroke-width="14" stroke-linejoin="round" paint-order="stroke">${esc(cap.text)}</text>

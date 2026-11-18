@@ -90,7 +90,7 @@ try {
   console.log("\nDělám z nich data pro video…");
   try {
     const { written, skipped } = await writeSpecs(dir, { model: opt("model") });
-    console.log(`Hotovo → ${written.length} reelů v ${dir}/reels/ (video: npm run reel -- ${dir})`);
+    console.log(`Hotovo → reely: ${written.length}, v ${dir}/reels/ (video: npm run reel -- ${dir})`);
     if (skipped.length) console.log(`  přeskočeno, není o jednom repu: ${skipped.join(", ")}`);
   } catch (e) {
     console.log(`Data pro video se nepovedla (${e.message}). Zkus znovu: npm run specs -- ${dir}`);
