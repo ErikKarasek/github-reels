@@ -10,7 +10,8 @@
     "site": "node src/site.js",
     "deploy": "node src/site.js && wrangler deploy",
     "preview": "node src/site.js && wrangler dev",
-    "reel": "node --env-file-if-exists=.env src/reel.js"
+    "reel": "node --env-file-if-exists=.env src/reel.js",
+    "specs": "node src/spec.js"
   },
   "engines": {
     "node": ">=20"

@@ -5,6 +5,7 @@ import { scrapeTrending, searchNewRepos } from "./github.js";
 import { hackerNews, rssFeeds } from "./news.js";
 import { rankRepos } from "./rank.js";
 import { buildPrompt, runClaude } from "./scripts.js";
+import { writeSpecs } from "./spec.js";
 
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(`--${name}`);
@@ -85,6 +86,15 @@ try {
   const reels = await runClaude(prompt, { model: opt("model") });
   await writeFile(join(dir, "reels.md"), reels);
   console.log(`Hotovo → ${dir}/reels.md`);
+  // The scripts are what matters; a failed conversion only means no ready-made video specs today.
+  console.log("\nDělám z nich data pro video…");
+  try {
+    const { written, skipped } = await writeSpecs(dir, { model: opt("model") });
+    console.log(`Hotovo → ${written.length} reelů v ${dir}/reels/ (video: npm run reel -- ${dir})`);
+    if (skipped.length) console.log(`  přeskočeno, není o jednom repu: ${skipped.join(", ")}`);
+  } catch (e) {
+    console.log(`Data pro video se nepovedla (${e.message}). Zkus znovu: npm run specs -- ${dir}`);
+  }
 } catch (e) {
   console.log(`Scénáře se nepovedly (${e.message}).\nPrompt je v ${dir}/prompt.md – vlož ho do Claude ručně.`);
   process.exitCode = 1;

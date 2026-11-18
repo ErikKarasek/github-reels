@@ -98,6 +98,13 @@ function makeScene(reel, accent) {
           `<text x="540" y="690" text-anchor="middle" font-family="${HEAVY}" font-weight="800" font-size="150" fill="#fff">${n}</text>` +
           `<text x="540" y="780" text-anchor="middle" font-family="${SANS}" font-size="52" fill="#8b949e">hvězd na GitHubu</text>`);
       }
+      case "growth": {
+        const n = Math.round((reel.starsGained ?? 0) * ease(age / 1.0)).toLocaleString("cs-CZ").replace(/ /g, " ");
+        const per = reel.period === "weekly" ? "za týden" : "za den";
+        return box(panel() + `<g transform="translate(540 500) scale(62)"><path d="${STAR}" fill="#e3b341"/></g>` +
+          `<text x="540" y="690" text-anchor="middle" font-family="${HEAVY}" font-weight="800" font-size="150" fill="#3fb950">+${n}</text>` +
+          `<text x="540" y="780" text-anchor="middle" font-family="${SANS}" font-size="52" fill="#8b949e">hvězd ${per}</text>`);
+      }
       case "name": {
         const size = Math.min(230, Math.floor(1500 / Math.max(3, name.length)));
         return box(panel() + `<text x="540" y="560" text-anchor="middle" font-family="${SANS}" font-size="60" fill="#8b949e">${esc(owner)} /</text>` +

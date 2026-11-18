@@ -34,7 +34,7 @@ const seconds = (file) =>
  * path of the joined mono WAV.
  */
 export async function voiceover(lines, dir, { voice, model = DEFAULT_MODEL, language = "cs" } = {}) {
-  const cache = join(dir, "..", ".voice-cache");
+  const cache = join("out", ".voice-cache");
   await mkdir(cache, { recursive: true });
   await mkdir(join(dir, "audio"), { recursive: true });
 
