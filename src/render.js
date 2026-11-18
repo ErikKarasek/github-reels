@@ -37,12 +37,22 @@ function wrap(text, max, rows) {
   return out;
 }
 
+/** Start and byte length of the PCM payload, found by walking the RIFF chunk list. */
+function dataChunk(wav) {
+  for (let pos = 12; pos + 8 <= wav.length; ) {
+    const size = wav.readUInt32LE(pos + 4);
+    if (wav.toString("latin1", pos, pos + 4) === "data") return { at: pos + 8, bytes: Math.min(size, wav.length - pos - 8) };
+    pos += 8 + size + (size & 1);
+  }
+  throw new Error("WAV has no data chunk");
+}
+
 /** Loudness per video frame from a 16-bit mono WAV, smoothed: quick attack, slow release. */
 function loudness(file, frames) {
   const wav = readFileSync(file);
-  const at = wav.indexOf("data") + 8;
+  const { at, bytes } = dataChunk(wav);
   const rate = wav.readUInt32LE(24);
-  const samples = new Int16Array(wav.buffer, wav.byteOffset + at, Math.floor((wav.length - at) / 2));
+  const samples = new Int16Array(wav.buffer, wav.byteOffset + at, Math.floor(bytes / 2));
   const loud = new Float32Array(frames);
   for (let f = 0; f < frames; f++) {
     const a = Math.floor((f / FPS) * rate), b = Math.min(samples.length, a + Math.floor(rate / FPS));
