@@ -1,0 +1,21 @@
+{
+  "repo": "ErikKarasek/github-reels",
+  "description": "Najde repa, o kterých se na GitHubu mluví, a udělá z nich reel. Česky, každý den.",
+  "stars": 0,
+  "language": "JavaScript",
+  "keyword": "REPO",
+  "voice": "Liam",
+  "character": { "shape": "ghost", "color": "#e4dffb", "eyeColor": "#1c1638" },
+  "caption": "Ahoj, já jsem Wisp 👻 Každý den ti česky ukážu repo z GitHubu, o kterém se zrovna mluví. Za 30 vteřin a bez hype. Když je něco rozpracované, řeknu ti to. A tohle video udělal kód, který si můžeš projít. 💬 Napiš REPO a pošlu ti odkaz\n\n#github #opensource #programovani #ai #cesky",
+  "lines": [
+    { "text": "Ahoj, já jsem Wisp.", "mood": "happy", "card": "name" },
+    { "text": "Každý den projdu GitHub", "mood": "curious", "card": "desc" },
+    { "text": "a najdu repa, o kterých se zrovna mluví.", "mood": "curious", "card": "desc" },
+    { "text": "Za třicet vteřin ti česky řeknu, co umí.", "mood": "proud", "card": "desc" },
+    { "text": "Žádný hype. Když je něco rozpracované, řeknu ti to.", "mood": "wink", "card": "desc" },
+    { "text": "Postavil mě jeden český vývojář.", "mood": "love", "card": "name" },
+    { "text": "A tohle video udělal kód, který si můžeš projít.", "mood": "surprised", "card": "name" },
+    { "text": "Sleduj mě, ať ti nic neuteče.", "mood": "happy", "card": "cta" },
+    { "text": "Napiš do komentáře REPO a pošlu ti odkaz.", "mood": "love", "card": "cta" }
+  ]
+}

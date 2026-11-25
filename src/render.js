@@ -101,7 +101,7 @@ function makeScene(reel, accent) {
   const chips = [
     reel.language && [LANG_COLOR[reel.language] ?? "#8b949e", reel.language],
     reel.license && ["#e3b341", `licence ${reel.license}`],
-    ["#3fb950", "open source"],
+    reel.license && ["#3fb950", "open source"], // no licence, no right to reuse it
   ].filter(Boolean);
   const panel = (fill = "#161b22") => `<rect x="70" y="380" width="940" height="460" rx="36" fill="${fill}" stroke="#30363d" stroke-width="3"/>`;
 
