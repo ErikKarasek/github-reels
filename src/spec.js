@@ -85,6 +85,16 @@ function cleanLines(lines) {
 const slugOf = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
 
 /** Writes `<day>/reels/<n>-<name>.json` for every repo reel in `<day>/reels.md`. */
+/**
+ * Trending lists give stars gained today or this week. A repo found through search only
+ * has its total since creation, so it gets the per-day rate the script talks about.
+ */
+function growthOf(known) {
+  if (!known?.starsGained) return {};
+  if (known.period === "daily" || known.period === "weekly") return { starsGained: known.starsGained, period: known.period };
+  return known.velocity ? { starsGained: known.velocity, period: "daily" } : {};
+}
+
 export async function writeSpecs(dayDir, { model } = {}) {
   const reelsMd = await readFile(join(dayDir, "reels.md"), "utf8");
   const { repos } = JSON.parse(await readFile(join(dayDir, "data.json"), "utf8"));
@@ -122,7 +132,7 @@ export async function writeSpecs(dayDir, { model } = {}) {
       // The numbers the script was written from, so the cards match what the voice says.
       description: known?.description || live?.description || "",
       stars: known?.stars ?? live?.stargazers_count ?? 0,
-      ...(known?.starsGained ? { starsGained: known.starsGained, period: known.period } : {}),
+      ...growthOf(known),
       language: known?.language ?? live?.language ?? null,
       ...(license && license !== "NOASSERTION" ? { license } : {}),
       ...DEFAULTS,
