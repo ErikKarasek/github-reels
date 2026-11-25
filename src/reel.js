@@ -9,7 +9,7 @@
 //
 // Voice clips are cached, so running it again only pays for lines that changed.
 import { existsSync, statSync } from "node:fs";
-import { readFile, readdir, mkdir } from "node:fs/promises";
+import { readFile, readdir, mkdir, writeFile } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { voiceover, DEFAULT_MODEL } from "./voice.js";
 import { render } from "./render.js";
@@ -57,4 +57,22 @@ for (const file of files) {
   console.log(stills ? "  stills…" : "  video…");
   await render(reel, durations, wav, out, { stills });
   console.log(`  ${stills ? dir + "/" : out}`);
+  if (!stills) {
+    const caption = await captionFor(reel, file);
+    if (caption) await writeFile(join(dir, "caption.txt"), caption);
+  }
+}
+
+/**
+ * The post text from the day's reels.md (the section that links this repo), with the
+ * credit the ElevenLabs free plan asks for. Hand-written specs can carry `caption`.
+ */
+async function captionFor(reel, file) {
+  let text = reel.caption;
+  const md = join(dirname(dirname(file)), "reels.md");
+  if (!text && existsSync(md)) {
+    const section = (await readFile(md, "utf8")).split(/\n## /).find((s) => s.includes(`github.com/${reel.repo}`));
+    text = section?.match(/### Popisek[^\n]*\n([\s\S]*?)(?=\n###|\n> |\n---|$)/)?.[1].replace(/`/g, "").trim();
+  }
+  return text ? `${text}\n\nHlas: ElevenLabs (AI)\n` : null;
 }

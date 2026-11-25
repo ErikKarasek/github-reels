@@ -1,0 +1,9 @@
+Jméno na profilu (hledá se podle něj):
+Wisp | GitHub repa a AI česky
+
+Bio (max 150 znaků):
+👻 Každý den nejzajímavější repa z GitHubu
+🤖 Open source a AI česky, za 30 sekund
+💬 Napiš REPO pod reel a pošlu ti odkaz
+
+Hlas v reelech: ElevenLabs (AI)

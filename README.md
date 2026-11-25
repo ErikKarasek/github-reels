@@ -33,6 +33,8 @@ npm run reel -- reels/rea.json --stills 1,10,20   # a few PNG frames to check th
 - **Who decides what:** Claude only splits the spoken text into lines and picks moods and cards. The facts come from `data.json` (the numbers the script was written from) and the GitHub API (licence), never from the model. Reels that are not about one repo, like a news story, are skipped.
 - **Cost:** each line is one request to `eleven_v4` with `language_code: cs`, billed per character (a 30 s reel is about 400). Clips are cached in `out/.voice-cache`, so re-rendering only pays for lines that changed. The daily run never renders on its own; rendering is always a deliberate `npm run reel`.
 - **Mascot:** `src/mascot/mascot.ts` is copied as-is from `wisp-buddy`; Node 24 runs it directly by stripping the types.
+- **Caption:** next to every video lands `caption.txt`, the post text and hashtags from that day's `reels.md` plus the ElevenLabs credit the free plan asks for.
+- **Account graphics:** `npm run brand` draws the profile picture and story highlight covers into `brand/`; `brand/bio.txt` holds the profile name and bio.
 
 ## The app
 

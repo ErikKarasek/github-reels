@@ -14,7 +14,7 @@ const LANG_COLOR = { TypeScript: "#3178c6", JavaScript: "#f1e05a", Python: "#357
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 const ease = (x) => 1 - Math.pow(1 - Math.max(0, Math.min(1, x)), 3);
 
-function primitiveSvg(p) {
+export function primitiveSvg(p) {
   if (p.kind === "ellipse") return `<ellipse cx="${p.cx}" cy="${p.cy}" rx="${p.rx}" ry="${p.ry}" fill="${p.fill}"/>`;
   if (p.kind === "path") return `<path d="${p.d}" fill="${p.fill}"/>`;
   return `<path d="${p.d}" fill="none" stroke="${p.stroke}" stroke-width="${p.width}" stroke-linecap="round" stroke-linejoin="round"/>`;
