@@ -36,6 +36,32 @@ npm run reel -- reels/rea.json --stills 1,10,20   # a few PNG frames to check th
 - **Caption:** next to every video lands `caption.txt`, the post text and hashtags from that day's `reels.md` plus the ElevenLabs credit the free plan asks for.
 - **Account graphics:** `npm run brand` draws the profile picture and story highlight covers into `brand/`; `brand/bio.txt` holds the profile name and bio.
 
+## Posting
+
+`npm run post` sends a rendered reel to Instagram and TikTok. It always shows the caption and asks before posting, and it notes what went out in `posted.json` next to the video, so a reel is never posted twice by accident.
+
+```bash
+npm run post -- out/2026-11-25/reels/1-victory             # both, asks first
+npm run post -- out/2026-11-25/reels/1-victory --ig        # only Instagram
+npm run post -- out/2026-11-25/reels/1-victory --dry-run   # check everything is set up, post nothing
+```
+
+- **Instagram** is published right away, with the "AI info" label on (`is_ai_generated`). It goes through the Instagram API with Facebook Login, because that path is the only one that takes the video straight from disk; the Instagram Login path needs the video at a public URL.
+- **TikTok** lands in your TikTok inbox as a draft. Posting straight to the profile needs an audited app, and the draft lets you add a sound anyway. The caption is copied to the clipboard; turn on "AI-generated content" before posting.
+
+### One-time setup
+
+Instagram:
+1. Switch the Instagram account to Creator or Business and link it to a Facebook Page (both free).
+2. At developers.facebook.com create an app (type Business) and add the Instagram product with Facebook Login.
+3. In the Graph API Explorer pick the app, add the permissions `instagram_basic`, `instagram_content_publish`, `pages_show_list`, `pages_read_engagement`, and generate a user token.
+4. Put `META_APP_ID`, `META_APP_SECRET` and that token as `META_USER_TOKEN` into `.env`, then run `npm run post -- auth instagram`. It swaps the token for a Page token that does not expire and stores it in `.tokens.json` (git-ignored); `META_USER_TOKEN` can go after that.
+
+TikTok:
+1. At developers.tiktok.com create an app, platform Desktop, add Login Kit and Content Posting API, scope `video.upload`.
+2. Register the redirect URI `http://127.0.0.1:3455/callback/`.
+3. Put `TIKTOK_CLIENT_KEY` and `TIKTOK_CLIENT_SECRET` into `.env`, then run `npm run post -- auth tiktok` and sign in in the browser. The sign-in lasts about half a year and renews itself while you use it.
+
 ## The app
 
 **https://github-reels.erikkarasek2005.workers.dev**: scripts, repos and news for each day, built for the phone. On an iPhone: Safari → Share → **Add to Home Screen**.

@@ -12,7 +12,8 @@
     "preview": "node src/site.js && wrangler dev",
     "reel": "node --env-file-if-exists=.env src/reel.js",
     "specs": "node src/spec.js",
-    "brand": "node src/brand.js"
+    "brand": "node src/brand.js",
+    "post": "node --env-file-if-exists=.env src/post.js"
   },
   "engines": {
     "node": ">=20"
