@@ -39,21 +39,43 @@ ${ghost("neutral", (S - size) / 2, 175, size)}</svg>`;
 // TikTok recompresses the profile picture hard and its gradients turn into blotchy bands,
 // so this one is flat: one background colour, one body colour.
 function avatarFlat() {
-  const S = 1080, size = 700;
+  // Smaller and dead centre: TikTok's upload crop zooms in, so leave room on every side.
+  // The mascot's viewBox has more room on the top left, hence the uneven offsets.
+  const S = 1080, size = 620;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}"><rect width="${S}" height="${S}" fill="#221d57"/>
-${ghost("neutral", (S - size) / 2, 175, size, "w", true)}</svg>`;
+${ghost("neutral", 216, 160, size, "w", true)}</svg>`;
 }
 
 // Story highlight covers: a mood plus a short label.
 const COVERS = [["repa", "neutral"], ["ai", "curious"], ["tipy", "proud"], ["o mně", "love"]];
 function cover(label, mood) {
-  const S = 1080, size = 520;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}">${backdrop(S, 450)}
-${ghost(mood, (S - size) / 2, 160, size)}
-<text x="540" y="860" text-anchor="middle" font-family="${HEAVY}" font-weight="800" font-size="110" fill="#fff">${label}</text></svg>`;
+  // Instagram shows highlights as circles, so everything stays inside one and the corners
+  // are cut away. The ghost offsets make up for the extra room in the mascot's viewBox.
+  const S = 1080, size = 480;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}"><defs><clipPath id="round"><circle cx="540" cy="540" r="540"/></clipPath></defs>
+<g clip-path="url(#round)">${backdrop(S, 430)}
+${ghost(mood, 289, 147, size)}
+<text x="540" y="810" text-anchor="middle" font-family="${HEAVY}" font-weight="800" font-size="100" fill="#fff">${label}</text></g></svg>`;
+}
+
+// Story for Erik's own Instagram announcing the account. The empty band under the text is
+// for Instagram's @mention sticker, which is the part people can actually tap.
+function launchStory() {
+  const W = 1080, H = 1920, size = 640;
+  const line = (y, text, fs, fill = "#fff", weight = 800) =>
+    `<text x="540" y="${y}" text-anchor="middle" font-family="${HEAVY}" font-weight="${weight}" font-size="${fs}" fill="${fill}">${text}</text>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${backdrop(W, 700).replace(`<rect width="${W}" height="${W}"`, `<rect width="${W}" height="${H}"`)}
+${line(300, "Rozjel jsem nový účet", 76)}
+${ghost("love", 540 - size * 0.523, 700 - size * 0.589, size)}
+${line(1170, "Každý den jedno repo z GitHubu,", 54, "#e4dffb", 600)}
+${line(1240, "o kterém se zrovna mluví.", 54, "#e4dffb", 600)}
+${line(1310, "Česky a za 30 vteřin.", 54, "#e4dffb", 600)}
+${line(1440, "Videa dělá kód, který jsem napsal.", 44, "#a49bd6", 600)}
+${line(1640, "@wisp.repa", 88)}</svg>`;
 }
 
 await mkdir("brand", { recursive: true });
+await sharp(Buffer.from(launchStory())).png().toFile("brand/story-launch.png");
 await sharp(Buffer.from(avatar())).png().toFile("brand/avatar.png");
 await sharp(Buffer.from(avatarFlat())).png().toFile("brand/avatar-tiktok.png");
 for (const [label, mood] of COVERS) await sharp(Buffer.from(cover(label, mood))).png().toFile(`brand/highlight-${label.replace(/\s/g, "-")}.png`);
