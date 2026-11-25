@@ -6,7 +6,7 @@
   "keyword": "REPO",
   "voice": "Liam",
   "character": { "shape": "ghost", "color": "#e4dffb", "eyeColor": "#1c1638" },
-  "caption": "Ahoj, já jsem Wisp 👻 Každý den ti česky ukážu repo z GitHubu, o kterém se zrovna mluví. Za 30 vteřin a bez hype. Když je něco rozpracované, řeknu ti to. A tohle video udělal kód, který si můžeš projít. 💬 Napiš REPO a pošlu ti odkaz\n\n#github #opensource #programovani #ai #cesky",
+  "caption": "Ahoj, já jsem Wisp. Každý den ti česky ukážu repo z GitHubu, o kterém se zrovna mluví. Za 30 vteřin a bez hype. Když je něco rozpracované, řeknu ti to. A tohle video udělal kód, který si můžeš projít. Napiš REPO a pošlu ti odkaz\n\n#github #opensource #programovani #ai #cesky",
   "lines": [
     { "text": "Ahoj, já jsem Wisp.", "mood": "happy", "card": "name" },
     { "text": "Každý den projdu GitHub", "mood": "curious", "card": "desc" },

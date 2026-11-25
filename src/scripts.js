@@ -41,7 +41,7 @@ ${newsLines}
    - **Payoff / CTA** – co si z toho má divák odnést + výzva: „Napiš do komentáře REPO a pošlu ti odkaz do DM.“ (odkaz posílá ManyChat automaticky, jen followerům – nikdy neříkej, že odkaz je v bio).
    - Ke každé větě v hranatých závorkách **[záběr]** – co ukázat na obrazovce (screen recording repa, demo, README, graf hvězd…).
    - **Text na obrazovce** – 3–5 krátkých titulků.
-   - **Popisek + 5 hashtagů** – popisek končí „💬 Napiš REPO a pošlu ti odkaz“.
+   - **Popisek + 5 hashtagů** – popisek končí „Napiš REPO a pošlu ti odkaz“. V popisku ani v textech na obrazovce žádné emoji, pomlčky jako interpunkce ani výpustky (…). Piš jako člověk.
    - **ManyChat** – odkaz, který má jít do DM (URL repa), a jedna věta, co v DM k odkazu napsat.
 3. Na konec dej jednu "rychlovku" – 15s reel "3 repa tohoto týdne" ve stylu výčtu.
 

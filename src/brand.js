@@ -15,12 +15,12 @@ const HEAVY = "Avenir Next, Helvetica Neue";
  * Wisp the way the app icon draws him: lit from the top left, darker lavender on the
  * far side, leaning a little. `id` keeps the gradient ids apart when one SVG has several.
  */
-function ghost(expression, x, y, size, id = "w") {
+function ghost(expression, x, y, size, id = "w", flat = false) {
   const g = mascotFrame(WISP, stillPose(EXPRESSIONS[expression]));
   const { cx, cy, rx, count } = g.body;
   const shade = `<radialGradient id="${id}" gradientUnits="userSpaceOnUse" cx="${cx - rx * 0.4}" cy="${cy - rx * 0.45}" r="${rx * 1.75}">
 <stop offset="0" stop-color="#fdfcff"/><stop offset="0.4" stop-color="#e7e2fc"/><stop offset="0.72" stop-color="#d8d1f6"/><stop offset="1" stop-color="#a49bd6"/></radialGradient>`;
-  const parts = g.primitives.map((p, i) => primitiveSvg(i < count ? { ...p, fill: `url(#${id})` } : p)).join("");
+  const parts = g.primitives.map((p, i) => primitiveSvg(i < count ? { ...p, fill: flat ? "#e9e4fc" : `url(#${id})` } : p)).join("");
   return `<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="0 0 ${g.width} ${g.height}"><defs>${shade}</defs><g transform="rotate(${g.tilt + 5} ${g.pivot.x} ${g.pivot.y})">${parts}</g></svg>`;
 }
 
@@ -36,6 +36,14 @@ function avatar() {
 ${ghost("neutral", (S - size) / 2, 175, size)}</svg>`;
 }
 
+// TikTok recompresses the profile picture hard and its gradients turn into blotchy bands,
+// so this one is flat: one background colour, one body colour.
+function avatarFlat() {
+  const S = 1080, size = 700;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}"><rect width="${S}" height="${S}" fill="#221d57"/>
+${ghost("neutral", (S - size) / 2, 175, size, "w", true)}</svg>`;
+}
+
 // Story highlight covers: a mood plus a short label.
 const COVERS = [["repa", "neutral"], ["ai", "curious"], ["tipy", "proud"], ["o mně", "love"]];
 function cover(label, mood) {
@@ -47,5 +55,6 @@ ${ghost(mood, (S - size) / 2, 160, size)}
 
 await mkdir("brand", { recursive: true });
 await sharp(Buffer.from(avatar())).png().toFile("brand/avatar.png");
+await sharp(Buffer.from(avatarFlat())).png().toFile("brand/avatar-tiktok.png");
 for (const [label, mood] of COVERS) await sharp(Buffer.from(cover(label, mood))).png().toFile(`brand/highlight-${label.replace(/\s/g, "-")}.png`);
-console.log("brand/avatar.png + highlight covers");
+console.log("brand/avatar.png, brand/avatar-tiktok.png + highlight covers");
